@@ -53,7 +53,7 @@ describe('app routes', () => {
       .then(res => {
         const studiosJSON = JSON.parse(JSON.stringify(studios));
         studiosJSON.forEach(studio => {
-          expect(res.body).toContainEqual(studio);
+          expect(res.body).toContainEqual({ _id: studio._id, name: studio.name });
         });
       });
   });
@@ -67,7 +67,7 @@ describe('app routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           name: 'ahhh',
-          __v: 0
+          // __v: 0
         });
       });
   });
