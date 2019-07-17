@@ -71,5 +71,20 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can update a studio by id', async() => {
+    const studio = await Studio.create({ name: 'ahhh' });
+
+    return request(app)
+      .put(`/api/v1/studio/${studio._id}`)
+      .send({ name: 'whyyyy' })
+      .then(res => {
+        const studioJSON = JSON.parse(JSON.stringify(studio));
+        expect(res.body).toEqual({
+          ...studioJSON,
+          name: 'whyyyy'
+        });
+      });
+  });
 });
 
