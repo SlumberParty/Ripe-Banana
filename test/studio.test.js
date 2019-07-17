@@ -57,5 +57,19 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get a studio by id', async() => {
+    const studio = await Studio.create({ name: 'ahhh' });
+
+    return request(app)
+      .get(`/api/v1/studio/${studio._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'ahhh',
+          __v: 0
+        });
+      });
+  });
 });
 
