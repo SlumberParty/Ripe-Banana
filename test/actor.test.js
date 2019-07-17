@@ -4,6 +4,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
+const Actor = require('../lib/models/Actor');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -30,6 +31,23 @@ describe('app routes', () => {
           dob: expect.any(String),
           pob: 'ahhh',
           __v: 0
+        });
+      });
+  });
+
+  it('can get actors', async() => {
+    const actors = await Actor.create([
+      { name: 'actor' },
+      { name: 'actor2' },
+      { name: 'actor3' }
+    ]);
+
+    return request(app)
+      .get('/api/v1/actors')
+      .then(res => {
+        const actorsJSON = JSON.parse(JSON.stringify(actors));
+        actorsJSON.forEach(actor => {
+          expect(res.body).toContainEqual({ _id: actor._id, name: actor.name });
         });
       });
   });
