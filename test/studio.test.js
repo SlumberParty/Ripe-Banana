@@ -86,5 +86,15 @@ describe('app routes', () => {
         });
       });
   });
-});
 
+  it('can delete a studio by id', async() => {
+    const studio = await Studio.create({ name: 'ahhh' });
+
+    return request(app)
+      .delete(`/api/v1/studio/${studio._id}`)
+      .then(res => {
+        const studioJSON = JSON.parse(JSON.stringify(studio));
+        expect(res.body).toEqual(studioJSON);
+      });
+  });
+});
