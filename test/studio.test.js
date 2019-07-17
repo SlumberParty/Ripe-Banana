@@ -4,7 +4,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
-// const Studio = require('../lib/models/Studio');
+const Studio = require('../lib/models/Studio');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -39,6 +39,23 @@ describe('app routes', () => {
           __v: 0
         });
       });  
+  });
+
+  it('get some studios', async() => {
+    const studios = await Studio.create([
+      { name: 'studio' },
+      { name: 'studio2' },
+      { name: 'studio3' }
+    ]);
+
+    return request(app)
+      .get('/api/v1/studio')
+      .then(res => {
+        const studiosJSON = JSON.parse(JSON.stringify(studios));
+        studiosJSON.forEach(studio => {
+          expect(res.body).toContainEqual(studio);
+        });
+      });
   });
 });
 
