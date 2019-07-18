@@ -40,7 +40,7 @@ describe('app routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           name: 'ahhh',
-          dob: date,
+          dob: date.toISOString(),
           pob: 'ahhh',
           __v: 0
         });

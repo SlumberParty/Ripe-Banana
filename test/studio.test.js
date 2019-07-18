@@ -5,6 +5,7 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Studio = require('../lib/models/Studio');
+const Film = require('../lib/models/Film');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -19,14 +20,26 @@ describe('app routes', () => {
     return mongoose.connection.close();
   });
 
+  let studio = null;
+  beforeEach(async() => {
+    studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'ahh' })));
+  });
+
+  let film = null;
+  beforeEach(async() => {
+    film = JSON.parse(JSON.stringify(await Film.create({ title: 'ahh', studio: studio._id, released: 2004, cast: [] })));
+  });
+
   it('can create a studio', () => {
     return request(app)
       .post('/api/v1/studio')
-      .send({ name: 'BlahBlah', address: {
-        city: '',
-        state: '',
-        country: ''
-      } })
+      .send({ 
+        name: 'BlahBlah', 
+        address: {
+          city: '',
+          state: '',
+          country: ''
+        } })
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
@@ -59,14 +72,18 @@ describe('app routes', () => {
   });
 
   it('can get a studio by id', async() => {
-    const studio = await Studio.create({ name: 'ahhh' });
+    // const studio = await Studio.create({ name: 'ahhh', films: [{ title: 'ahhh' }] });
 
     return request(app)
       .get(`/api/v1/studio/${studio._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          name: 'ahhh',
+          name: 'ahh',
+          films: [{ 
+            _id: film._id,
+            title: 'ahh'
+          }] 
         });
       });
   });
