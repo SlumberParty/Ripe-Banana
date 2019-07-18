@@ -86,4 +86,15 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can delete an actor by id', async() => {
+    const actor = await Actor.create({ name: 'ahhh' });
+
+    return request(app)
+      .delete(`/api/v1/actors/${actor._id}`)
+      .then(res => {
+        const actorJSON = JSON.parse(JSON.stringify(actor));
+        expect(res.body).toEqual(actorJSON);
+      });
+  });
 });
