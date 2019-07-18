@@ -51,4 +51,24 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get a actor by id', async() => {
+    const date = new Date();
+    const actors = await Actor.create({ name: 'ahhh', dob: date, pob: '' });
+
+    return request(app)
+      .get(`/api/v1/actors/${actors._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          name: 'ahhh',
+          dob: expect.any(String),
+          pob: '',
+          // films: [{ 
+          //   _id: expect.any(String),
+          //   title: '',
+          //   released: ''
+          // }]
+        });
+      });
+  });
 });

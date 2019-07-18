@@ -67,7 +67,6 @@ describe('app routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           name: 'ahhh',
-          // __v: 0
         });
       });
   });
