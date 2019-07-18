@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Actor = require('../lib/models/Actor');
+const Film = require('../lib/models/Film');
+const Studio = require('../lib/models/Studio');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -17,6 +19,16 @@ describe('app routes', () => {
 
   afterAll(() => {
     return mongoose.connection.close();
+  });
+
+  let studio = null; 
+  beforeEach(async() => {
+    studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'ahh', address: 'ahh' })));
+  });
+
+  let film = null;
+  beforeEach(async() => {
+    film = JSON.parse(JSON.stringify(await Film.create({ title: 'ahh', studio: studio._id, released: 2004, cast: [] })));
   });
 
   it('can create an actor', () => {
@@ -54,7 +66,16 @@ describe('app routes', () => {
 
   it('can get a actor by id', async() => {
     const date = new Date();
-    const actors = await Actor.create({ name: 'ahhh', dob: date, pob: '' });
+    const actors = await Actor.create({ 
+      name: 'ahhh', 
+      dob: date, 
+      pob: '',
+      films: [{ 
+        _id: film._id,
+        title: '',
+        released: ''
+      }] 
+    });
 
     return request(app)
       .get(`/api/v1/actors/${actors._id}`)
@@ -63,11 +84,11 @@ describe('app routes', () => {
           name: 'ahhh',
           dob: expect.any(String),
           pob: '',
-          // films: [{ 
-          //   _id: expect.any(String),
-          //   title: '',
-          //   released: ''
-          // }]
+          films: [{ 
+            _id: film._id,
+            title: '',
+            released: ''
+          }]
         });
       });
   });

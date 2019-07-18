@@ -5,7 +5,7 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Actor = require('../lib/models/Actor');
-const Studio - require('../lib/models/Studio');
+const Studio = require('../lib/models/Studio');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -50,7 +50,7 @@ describe('app routes', () => {
           released: 2004, 
           cast: [{ 
             role: 'ahh', 
-            actor: expect.any(String),
+            actor: actor._id,
           }],
           __v: 0
         });
