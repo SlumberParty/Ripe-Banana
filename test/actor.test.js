@@ -71,4 +71,19 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can update an actor by id', async() => {
+    const actors = await Actor.create({ name: 'jeffry mcacterson' });
+
+    return request(app)
+      .put(`/api/v1/actors/${actors._id}`)
+      .send({ name: 'jeff' })
+      .then(res => { 
+        const actorJSON = JSON.parse(JSON.stringify(actors));
+        expect(res.body).toEqual({
+          ...actorJSON,
+          name: 'jeff'
+        });
+      });
+  });
 });
