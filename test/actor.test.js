@@ -40,7 +40,7 @@ describe('app routes', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           name: 'ahhh',
-          dob: expect.any(String),
+          dob: date,
           pob: 'ahhh',
           __v: 0
         });
@@ -70,11 +70,7 @@ describe('app routes', () => {
       name: 'ahhh', 
       dob: date, 
       pob: '',
-      films: [{ 
-        _id: film._id,
-        title: '',
-        released: ''
-      }] 
+      films: [] 
     });
 
     return request(app)
@@ -84,11 +80,7 @@ describe('app routes', () => {
           name: 'ahhh',
           dob: expect.any(String),
           pob: '',
-          films: [{ 
-            _id: film._id,
-            title: '',
-            released: ''
-          }]
+          films: []
         });
       });
   });

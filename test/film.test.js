@@ -45,10 +45,11 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          name: 'BlahBlah',
-          studio: 'ahh',
+          title: 'ahh', 
+          studio: studio._id, 
           released: 2004, 
           cast: [{ 
+            _id: expect.any(String),
             role: 'ahh', 
             actor: actor._id,
           }],
