@@ -49,4 +49,18 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get a reviewer by id', async() => {
+    const reviewer = await Reviewer.create({ name: 'ahhh', company: 'ahhh' });
+
+    return request(app)
+      .get(`/api/v1/reviewers/${reviewer._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'ahhh',
+          company: 'ahhh'
+        });
+      });
+  });
 });
