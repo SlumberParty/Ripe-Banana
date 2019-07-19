@@ -31,6 +31,19 @@ describe('app routes', () => {
     studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'ahh' })));
   });
 
+  let film = null;
+  beforeEach(async() => {
+    film = JSON.parse(JSON.stringify(await Film.create({ 
+      title: 'ahh', 
+      studio: studio._id, 
+      released: 2004, 
+      cast: [{ 
+        role: 'ahhh',
+        actor: actor._id,
+      }] 
+    })));
+  });
+
   it('can create a film', () => {
     return request(app)
       .post('/api/v1/films')
@@ -96,7 +109,6 @@ describe('app routes', () => {
       .then(res => {
         const filmsJSON = JSON.parse(JSON.stringify(films));
         filmsJSON.forEach(film => {
-          console.log(film);
           expect(res.body).toContainEqual({
             _id: film._id,
             title: film.title, 
@@ -108,6 +120,37 @@ describe('app routes', () => {
               actor: actor._id,
             }]
           });
+        });
+      });
+  });
+
+  it('gets a film by id', async() => {
+
+    return request(app)
+      .get(`/api/v1/films/${film._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          title: film.title, 
+          released: 2004,
+          studio: {
+            _id: studio._id,
+            name: studio.name,
+          },
+          cast: [{
+            _id: expect.any(String),
+            role: expect.any(String),
+            actor: {
+              _id: actor._id,
+              name: actor.name,
+            }
+          }]
+        // reviews: [{
+        //   rating:
+        //   review:
+        //   reviewer: {
+        //     name:
+        //   }
+        // }]
         });
       });
   });
