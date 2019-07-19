@@ -26,10 +26,16 @@ describe('app routes', () => {
     studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'ahh', address: 'ahh' })));
   });
 
+  let actor = null; 
+  beforeEach(async() => {
+    actor = JSON.parse(JSON.stringify(await Actor.create({ name: 'ahh', dob: '12-25-1981', pob: 'ahh' })));
+  });
+
   let film = null;
   beforeEach(async() => {
-    film = JSON.parse(JSON.stringify(await Film.create({ title: 'ahh', studio: studio._id, released: 2004, cast: [] })));
+    film = JSON.parse(JSON.stringify(await Film.create({ title: 'ahh', studio: studio._id, released: 2004, cast: [{ actor: actor._id }] })));
   });
+
 
   it('can create an actor', () => {
     const date = new Date();
@@ -64,23 +70,32 @@ describe('app routes', () => {
       });
   });
 
-  it('can get a actor by id', async() => {
-    const date = new Date();
-    const actors = await Actor.create({ 
-      name: 'ahhh', 
-      dob: date, 
-      pob: '',
-      films: [] 
-    });
+  it('can get an actor by id', async() => {
+    // const date = new Date();
+    // const actors = await Actor.create({ 
+    //   name: 'ahhh', 
+    //   dob: date, 
+    //   pob: '',
+    //   films: [{
+    //     _id: film._id,
+    //     title: film.title,
+    //     released: film.released,
+    //   }] 
+    // });
 
     return request(app)
-      .get(`/api/v1/actors/${actors._id}`)
+      .get(`/api/v1/actors/${actor._id}`)
       .then(res => {
+        console.log(res.body);
         expect(res.body).toEqual({
-          name: 'ahhh',
+          name: 'ahh',
           dob: expect.any(String),
-          pob: '',
-          films: []
+          pob: 'ahh',
+          films: [{
+            _id: film._id,
+            title: film.title,
+            released: film.released,
+          }]
         });
       });
   });
@@ -108,6 +123,14 @@ describe('app routes', () => {
       .then(res => {
         const actorJSON = JSON.parse(JSON.stringify(actor));
         expect(res.body).toEqual(actorJSON);
+      });
+  });
+
+  it('Can NOT delete if in a film', async() => {
+    return request(app)
+      .delete(`/api/v1/actors/${actor._id}`)
+      .then(res => {
+        expect(res.body).toEqual({ message: 'NOPE! No delete! Has actor!' });
       });
   });
 });

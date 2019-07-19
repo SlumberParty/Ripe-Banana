@@ -87,15 +87,16 @@ describe('app routes', () => {
       .get('/api/v1/reviews')
       .then(res => {
         const reviewJSON = JSON.parse(JSON.stringify(review));
-        reviewJSON.forEach(film => {
+        reviewJSON.forEach(review => {
           expect(res.body).toContainEqual({
             _id: expect.any(String),
             rating: review.rating,
-            review: review,
+            review: review.review,
             film: {
-              id: film._id,
+              _id: film._id,
               title: film.title,
             },
+            __v: 0,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
           });

@@ -6,6 +6,7 @@ const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Studio = require('../lib/models/Studio');
 const Film = require('../lib/models/Film');
+const Actor = require('../lib/models/Actor');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -25,9 +26,14 @@ describe('app routes', () => {
     studio = JSON.parse(JSON.stringify(await Studio.create({ name: 'ahh' })));
   });
 
+  let actor = null;
+  beforeEach(async() => {
+    actor = JSON.parse(JSON.stringify(await Actor.create({ name: 'ahh' })));
+  });
+
   let film = null;
   beforeEach(async() => {
-    film = JSON.parse(JSON.stringify(await Film.create({ title: 'ahh', studio: studio._id, released: 2004, cast: [] })));
+    film = JSON.parse(JSON.stringify(await Film.create({ title: 'ahh', studio: studio._id, released: 2004, cast: [{ actor: actor._id }] })));
   });
 
   it('can create a studio', () => {
@@ -112,5 +118,14 @@ describe('app routes', () => {
         const studioJSON = JSON.parse(JSON.stringify(studio));
         expect(res.body).toEqual(studioJSON);
       });
+  });
+
+  it('throws a fit because of silly reasons', async() => {
+    return request(app)
+      .delete(`/api/v1/studio/${studio._id}`)
+      .then(res => {
+        expect(res.status).toEqual('AAAAAAHHHHHH SCREAMING');
+      });
+
   });
 });

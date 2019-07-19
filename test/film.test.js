@@ -165,7 +165,6 @@ describe('app routes', () => {
         actor: actor._id 
       }]  
     });
-    //DELETE THIS!?
 
     return request(app)
       .delete(`/api/v1/films/${film._id}`)
