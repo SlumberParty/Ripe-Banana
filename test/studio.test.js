@@ -124,7 +124,7 @@ describe('app routes', () => {
     return request(app)
       .delete(`/api/v1/studio/${studio._id}`)
       .then(res => {
-        expect(res.status).toEqual('AAAAAAHHHHHH SCREAMING');
+        expect(res.body.message).toEqual('AAAAAAHHHHHH SCREAMING');
       });
 
   });

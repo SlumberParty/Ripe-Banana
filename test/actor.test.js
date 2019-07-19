@@ -71,18 +71,6 @@ describe('app routes', () => {
   });
 
   it('can get an actor by id', async() => {
-    // const date = new Date();
-    // const actors = await Actor.create({ 
-    //   name: 'ahhh', 
-    //   dob: date, 
-    //   pob: '',
-    //   films: [{
-    //     _id: film._id,
-    //     title: film.title,
-    //     released: film.released,
-    //   }] 
-    // });
-
     return request(app)
       .get(`/api/v1/actors/${actor._id}`)
       .then(res => {
