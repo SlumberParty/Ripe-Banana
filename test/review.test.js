@@ -62,45 +62,18 @@ describe('app routes', () => {
   });
 
   it('gets some reviews', async() => {
-    const review = await Review.create([
-      {
-        rating: 1,
-        reviewer: reviewer._id,
-        review: 'fuck fuck fuck FUCK',
-        film: film._id,
-      },
-      {
-        rating: 5,
-        reviewer: reviewer._id,
-        review: 'nope nope nope NOPE',
-        film: film._id,
-      },
-      {
-        rating: 4,
-        reviewer: reviewer._id,
-        review: 'ahhhhhhh WHEEEEEEE',
-        film: film._id,
-      }
-    ]);
+    await Review.create([...Array(100)].map((review, i) => ({
+      rating: 1, 
+      reviewer: reviewer._id,
+      review: `my review number ${i}`,
+      film: film._id
+    })));
 
     return request(app)
       .get('/api/v1/reviews')
       .then(res => {
-        const reviewJSON = JSON.parse(JSON.stringify(review));
-        reviewJSON.forEach(review => {
-          expect(res.body).toContainEqual({
-            _id: expect.any(String),
-            rating: review.rating,
-            review: review.review,
-            film: {
-              _id: film._id,
-              title: film.title,
-            },
-            __v: 0,
-            createdAt: expect.any(String),
-            updatedAt: expect.any(String),
-          });
-        });
+        expect(res.body).toHaveLength(100);
+       
       });
   });
 });
