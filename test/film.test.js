@@ -72,7 +72,7 @@ describe('app routes', () => {
       });  
   });
 
-  it('get some films', async() => {
+  it('gets some films', async() => {
     const films = await Film.create([
       {
         title: 'ahh', 

@@ -4,6 +4,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
+const Review = require('../lib/models/Review');
 const Reviewer = require('../lib/models/Reviewer');
 const Studio = require('../lib/models/Studio');
 const Film = require('../lib/models/Film');
@@ -58,5 +59,47 @@ describe('app routes', () => {
           updatedAt: expect.any(String),
         });
       });  
+  });
+
+  it('gets some reviews', async() => {
+    const review = await Review.create([
+      {
+        rating: 1,
+        reviewer: reviewer._id,
+        review: 'fuck fuck fuck FUCK',
+        film: film._id,
+      },
+      {
+        rating: 5,
+        reviewer: reviewer._id,
+        review: 'nope nope nope NOPE',
+        film: film._id,
+      },
+      {
+        rating: 4,
+        reviewer: reviewer._id,
+        review: 'ahhhhhhh WHEEEEEEE',
+        film: film._id,
+      }
+    ]);
+
+    return request(app)
+      .get('/api/v1/reviews')
+      .then(res => {
+        const reviewJSON = JSON.parse(JSON.stringify(review));
+        reviewJSON.forEach(film => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            rating: review.rating,
+            review: review,
+            film: {
+              id: film._id,
+              title: film.title,
+            },
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+          });
+        });
+      });
   });
 });
