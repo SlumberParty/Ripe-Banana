@@ -154,4 +154,24 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can delete an film by id', async() => {
+    const film = await Film.create({ 
+      title: 'ahh', 
+      studio: studio._id, 
+      released: 2004, 
+      cast: [{ 
+        role: 'ahh', 
+        actor: actor._id 
+      }]  
+    });
+    //DELETE THIS!?
+
+    return request(app)
+      .delete(`/api/v1/films/${film._id}`)
+      .then(res => {
+        const filmJSON = JSON.parse(JSON.stringify(film));
+        expect(res.body).toEqual(filmJSON);
+      });
+  });
 });
